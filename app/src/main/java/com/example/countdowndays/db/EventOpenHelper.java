@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class EventOpenHelper extends SQLiteOpenHelper {
-    public static final String CREATE_EVENT = "create table event (" +
+    public static final String CREATE_EVENT = "create table event(" +
             "id integer primary key autoincrement," +
             "title text," +
             "date long," +

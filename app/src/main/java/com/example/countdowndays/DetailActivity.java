@@ -34,7 +34,7 @@ import java.util.Date;
 
 
 public class DetailActivity extends AppCompatActivity {
-    private TextView detail_title,detail_note,detail_days,detail_sol;
+    private TextView detail_title,detail_note,detail_days,detail_sol,detail_show_song,detail_show_time;
 
     private Button detail_edit_delete,detail_edit_ok,edit_date,detail_ok,detail_edit,edit_noti_date;
     private RadioGroup edit_color_group;
@@ -45,7 +45,7 @@ public class DetailActivity extends AppCompatActivity {
     private Calendar calendar_noti;  //提醒日期
     private Event e;
     private Spinner detail_spinner;
-    private TextView detail_show_song;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,7 @@ public class DetailActivity extends AppCompatActivity {
         detail_edit = (Button)findViewById(R.id.detail_edit);
         detail_spinner = (Spinner)findViewById(R.id.detail_spinner);
         detail_show_song = (TextView)findViewById(R.id.show_song);
+        detail_show_time = (TextView)findViewById(R.id.detail_show_time);
 
         detail_edit_delete = (Button)findViewById(R.id.detail_edit_delete);
         detail_edit_ok = (Button)findViewById(R.id.detail_edit_ok);
@@ -76,10 +77,15 @@ public class DetailActivity extends AppCompatActivity {
         e = (Event)i.getSerializableExtra("EVENT");
         Date now = new Date();
         calendar = Calendar.getInstance();
+        calendar_noti = Calendar.getInstance();
         calendar.setTimeInMillis(e.getDate());
+        calendar_noti.setTimeInMillis(e.getNotidate());
 
         double days_double = (e.getDate() - now.getTime())/(1000 * 60 * 60 * 24.0);
+        double days_double_noti = (e.getNotidate()-now.getTime())/(1000 * 60 * 60 * 24.0);
+
         int days = (int)Math.ceil(days_double);
+        int days_noti = (int)Math.ceil(days_double_noti);
         if(days>0){
             detail_sol.setText("还有");
             detail_days.setText(String.valueOf(days));
@@ -93,7 +99,7 @@ public class DetailActivity extends AppCompatActivity {
 
         String[] music_arr = getResources().getStringArray(R.array.music);
         detail_show_song.setText(music_arr[e.getBgm()]);
-
+        detail_show_time.setText("距离提醒日期还有:"+days_noti+"天");
         switch(e.getColor()){
             case 1:{
                 detail_title.setTextColor(Color.parseColor("#F06292"));

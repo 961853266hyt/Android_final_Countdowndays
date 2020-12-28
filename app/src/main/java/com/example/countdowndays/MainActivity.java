@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()){
                     case R.id.add_event:{
-                        sendBroadcast(new Intent("com.agmcs.countdown.add_event"));
+                        sendBroadcast(new Intent("com.example.countdowndays.add_event"));
                         DragTopLayout dtl = (DragTopLayout)findViewById(R.id.dtl);
                         viewPager.setCurrentItem(0);
                         dtl.toggleTopView();

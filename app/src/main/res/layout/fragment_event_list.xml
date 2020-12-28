@@ -81,14 +81,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/time_to_notice"
+                    android:layout_width="240dp"
+                    android:layout_height="40dp"
                     android:textColorHint="#C5CAE9"
                     android:maxLines="3"
                     android:maxLength="32"
-                    android:id="@+id/time_to_notice"
+                    android:textSize="25sp"
                     android:hint="设定提醒时间"/>
+                    <ImageButton
+                        android:id="@+id/imagebutton_notice"
+                        android:src="@mipmap/calendar_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:scaleType="fitXY"
+                        android:background="?attr/colorPrimaryDark"/>
+                </LinearLayout>
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/song_spinner"
                 android:layout_width="wrap_content"

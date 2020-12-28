@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -49,11 +50,13 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
     private RadioGroup color_group;
     private Button date_btn,ok_btn;
     private Calendar c;
+    private Calendar c_notice;
     private EventDB eventDB;
     private DragTopLayout dtl;
     private Adapter adapter;
     private Spinner song_spinner;
     private TextView detail_song;
+    private ImageButton notice_btn;
 
 
     public EventListFragment() {
@@ -141,6 +144,25 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
         ok_btn = (Button)view.findViewById(R.id.ok_btn);
         song_spinner = (Spinner)view.findViewById(R.id.song_spinner);
         detail_song = (TextView)view.findViewById(R.id.show_song);
+        notice_btn = (ImageButton)view.findViewById(R.id.imagebutton_notice);
+
+        notice_btn.setOnClickListener(new View.OnClickListener() {  //设置提醒日期按钮
+            @Override
+            public void onClick(View v) {
+                Calendar calendar_notice = Calendar.getInstance();
+                new DatePickerDialog(getActivity(),DatePickerDialog.THEME_HOLO_LIGHT,new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        c_notice= Calendar.getInstance();
+                        c_notice.set(year,monthOfYear,dayOfMonth);
+                    }
+                },calendar_notice.get(Calendar.YEAR),
+                        calendar_notice.get(Calendar.MONTH),
+                        calendar_notice.get(Calendar.DAY_OF_MONTH)
+                ).show();
+            }
+        });
+
         date_btn.setOnClickListener(new View.OnClickListener() {      //设置日期按钮
             @Override
             public void onClick(View v) {
@@ -165,16 +187,21 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 String note = note_ET.getText().toString();
                 if (c == null){
                     new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT)
-                            .setTitle("Wrong")
+                            .setTitle("Sorry")
                             .setMessage("has not set date")
                             .show();
-                    //new Dialog(getActivity(),"Hey","还没设置日期呀").show();
+                    return;
+                }
+                if(c_notice == null){
+                    new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT)
+                            .setTitle("Sorry")
+                            .setMessage("has not set notice date")
+                            .show();
                     return;
                 }
                 if(TextUtils.isEmpty(title)){
-                    //new Dialog(getActivity(),"Hey","还没设置标题呀").show();
                     new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT)
-                            .setTitle("Wrong")
+                            .setTitle("Sorry")
                             .setMessage("has not set title")
                             .show();
                     return;
@@ -183,10 +210,10 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 note_ET.setText("");
 
                 Event e = new Event();
+                e.setNotidate(c_notice.getTimeInMillis());
                 e.setDate(c.getTimeInMillis());
                 e.setTitle(title);
                 e.setNote(note);
-                //e.setNotidate();
                 e.setBgm(song_spinner.getSelectedItemPosition());
                 switch (color_group.getCheckedRadioButtonId()){
                     case R.id.color1:{
@@ -211,6 +238,7 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 adapter.notifyDataSetChanged();
                 dtl.closeTopView(true);
                 c = null;
+                c_notice = null;
             }
         });
 

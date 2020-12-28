@@ -110,7 +110,7 @@
                     android:alpha="0.6"
                     android:textColor="#39BDB1" />
                 <TextView
-                    android:id="@+id/detai_show_time"
+                    android:id="@+id/detail_show_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"

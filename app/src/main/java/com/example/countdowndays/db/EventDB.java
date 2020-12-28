@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventDB {
-    public static  final String DB_NAME = "event_db";
+    public static  final String DB_NAME = "event_db2";
     public static final int VERSION = 1;
     private static EventDB eventDB;
     private SQLiteDatabase db;
