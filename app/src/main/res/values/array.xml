@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="music">
+        <item>lemon</item>
+        <item>cheap_thrills</item>
+        <item>music3</item>
+    </string-array>
+</resources>
