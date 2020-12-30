@@ -10,12 +10,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +32,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.countdowndays.db.EventDB;
 import com.example.countdowndays.model.Event;
@@ -57,7 +62,9 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
     private Spinner song_spinner;
     private TextView detail_song;
     private ImageButton notice_btn;
-
+    private EditText edit_search_input;
+    private TextView text_search_cancel;
+    private View view_holder_for_focus;
 
     public EventListFragment() {
         // Required empty public constructor
@@ -99,6 +106,20 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
         dtl = (DragTopLayout)view.findViewById(R.id.dtl);
 
         listView = (ListView)view.findViewById(R.id.listview);
+        edit_search_input = (EditText)view.findViewById(R.id.edit_search_input);
+        text_search_cancel = (TextView)view.findViewById(R.id.text_search_cancel);
+        view_holder_for_focus = (View)view.findViewById(R.id.view_holder_for_focus);
+        text_search_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_search_input.setText("");
+                hideKeyboard(getContext(), edit_search_input);
+                view_holder_for_focus.requestFocus();
+            }
+        });
+
+
+
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -123,19 +144,19 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
         list = eventDB.loadEvent();
 
         adapter = new Adapter(getActivity(),R.layout.card_item,list);
+
         listView.setAdapter(adapter);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event e = (Event)(parent.getItemAtPosition(position));
-                Intent i = new Intent(getActivity(),DetailActivity.class);
+                Intent i = new Intent(getActivity(),DetailActivity.class);     //跳转到detail activity
                 i.putExtra("EVENT",e);
                 startActivityForResult(i, position);
             }
         });
-
-
 
         title_ET = (EditText)view.findViewById(R.id.title_et);
         note_ET = (EditText)view.findViewById(R.id.note_et);
@@ -242,6 +263,27 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
             }
         });
 
+
+        edit_search_input.addTextChangedListener(new TextWatcher() {                //搜索框处理
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                List<Event> list_temp = EventDB.getInstance(getContext()).FuzzySearchEvent(s.toString());
+                list.clear();
+                list.addAll(list_temp);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         return view;
     }
 
@@ -249,6 +291,19 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
     public void onResume() {
         super.onResume();
         Log.d("hihihi", "resume");
+    }
+
+    private void printlist(List<Event> list){
+        for(Event event:list){
+            Log.d("1",event.getTitle());
+        }
+    }
+
+    private void hideKeyboard(Context context, View view) {
+        InputMethodManager im = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (im != null) {
+            im.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 
@@ -262,6 +317,8 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
+
             Event event = getItem(position);
             View view;
             ViewHolder viewHolder;
@@ -277,12 +334,12 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 viewHolder.color = (RelativeLayout)view.findViewById(R.id.card_color);
                 viewHolder.show_song = (TextView)view.findViewById(R.id.show_song);
                 viewHolder.detail_music = (TextView)view.findViewById(R.id.detail_music_text);
-
                 view.setTag(viewHolder);
             }else{
                 view = convertView;
                 viewHolder = (ViewHolder)view.getTag();
             }
+           // printlist(list);
             viewHolder.title.setText(list.get(position).getTitle());
             viewHolder.date.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date(list.get(position).getDate())));
             Date now = new Date();
@@ -313,9 +370,7 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                     break;
                 }
             }
-
             viewHolder.note.setText(list.get(position).getNote());
-
             //viewHolder.show_song.setText(list.get(position).getBgm());
             return view;
         }

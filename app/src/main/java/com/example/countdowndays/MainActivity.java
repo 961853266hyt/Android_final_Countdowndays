@@ -16,11 +16,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
+
+import com.example.countdowndays.db.EventDB;
+import com.example.countdowndays.db.EventOpenHelper;
+import com.example.countdowndays.model.Event;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +38,7 @@ import github.chenupt.dragtoplayout.DragTopLayout;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
+    private EditText edit_search_input;
     private List<Fragment> list = new ArrayList<Fragment>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +68,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        list.add(new EventListFragment());
+        EventListFragment eventListFragment = new EventListFragment();
+        list.add(eventListFragment);
         list.add(new DateCalmFrag());
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(),list);
         viewPager.setAdapter(adapter);
-//        FragmentManager fm = getSupportFragmentManager();
-//        Fragment fragment = fm.findFragmentById(R.id.content);
-//        if (fragment == null) {
-//            fragment = new EventListFragment();
-//            fm.beginTransaction()
-//                    .add(R.id.content, fragment)
-//                    .commit();
-//        }
     }
-
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> list;

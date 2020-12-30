@@ -59,10 +59,40 @@ public class EventDB {
     public List<Event> loadEvent(){
         List<Event> list = new ArrayList<Event>();
         Cursor cursor = db.query("event",null,null,null,null,null,"id",null);
-        Log.d("hihihi","b");
         if(cursor.moveToLast()){
             do{
-                Log.d("hihihi","a");
+                Event event = new Event();
+                event.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                event.setColor(cursor.getInt(cursor.getColumnIndex("color")));
+                event.setNote(cursor.getString(cursor.getColumnIndex("note")));
+                event.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+                event.setDate(cursor.getLong(cursor.getColumnIndex("date")));
+                event.setBgm(cursor.getInt(cursor.getColumnIndex("bgm")));
+                event.setNotidate(cursor.getLong(cursor.getColumnIndex("notidate")));
+                list.add(event);
+            }while(cursor.moveToPrevious());
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+        return list;
+    }
+
+    public List<Event> FuzzySearchEvent(String s){
+
+        List<Event> list = new ArrayList<Event>();
+        String Fuzzysql2 = "select * from event";
+        Cursor cursor;
+        if(s == null){
+            cursor = db.rawQuery(Fuzzysql2,null);
+        }
+        else{
+             cursor = db.query("event", null, "title like '%"
+                     + s + "%'", null, null, null, null);
+        }
+
+        if(cursor.moveToLast()){
+            do{
                 Event event = new Event();
                 event.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 event.setColor(cursor.getInt(cursor.getColumnIndex("color")));

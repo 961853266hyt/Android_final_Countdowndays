@@ -1,8 +1,12 @@
 package com.example.countdowndays.model;
 
-import java.io.Serializable;
+import com.tuacy.fuzzysearchlibrary.IFuzzySearchItem;
+import com.tuacy.fuzzysearchlibrary.PinyinUtil;
 
-public class Event implements Serializable {
+import java.io.Serializable;
+import java.util.List;
+
+public class Event implements Serializable, IFuzzySearchItem {
     private int id;
     private String title;
     private  String note;
@@ -65,5 +69,17 @@ public class Event implements Serializable {
 
     public void setNotidate(Long notidate) {
         this.notidate = notidate;
+    }
+
+    @Override
+    public String getSourceKey() {
+
+        return PinyinUtil.getPinYin(title);
+    }
+
+    @Override
+    public List<String> getFuzzyKey() {
+
+        return PinyinUtil.getPinYinList(title);
     }
 }
