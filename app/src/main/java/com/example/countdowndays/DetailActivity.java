@@ -222,7 +222,10 @@ public class DetailActivity extends AppCompatActivity {
         detail_edit_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(2);
+                Intent i = new Intent();
+                i.putExtra("DeleteEVENT",e);   //这里传入id用来删除对应的notification
+                setResult(2, i);
+                //setResult(2);
                 EventDB.getInstance(DetailActivity.this).deleteEvent(e);
                 finish();
             }

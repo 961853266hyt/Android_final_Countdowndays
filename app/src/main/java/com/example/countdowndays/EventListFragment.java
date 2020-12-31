@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.Editable;
@@ -33,6 +34,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.countdowndays.db.EventDB;
@@ -65,6 +67,7 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
     private EditText edit_search_input;
     private TextView text_search_cancel;
     private View view_holder_for_focus;
+    private NotificationSender notificationSender;
 
     public EventListFragment() {
         // Required empty public constructor
@@ -80,6 +83,7 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 Event e = (Event)data.getSerializableExtra("EVENT");
                 try {
                     list.set(requestCode,e);
+                    notificationSender.SendEventNotification(e,getContext());
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -87,16 +91,19 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 break;
             }
             case 2:{
+                Event e = (Event)data.getSerializableExtra("DeleteEVENT");
                 try {
                     list.remove(requestCode);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    NotificationSender.CancelNotification(e);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
                 }
                 adapter.notifyDataSetChanged();
             }
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -105,6 +112,7 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
         dtl = (DragTopLayout)view.findViewById(R.id.dtl);
 
+        notificationSender = new NotificationSender(getContext());
         listView = (ListView)view.findViewById(R.id.listview);
         edit_search_input = (EditText)view.findViewById(R.id.edit_search_input);
         text_search_cancel = (TextView)view.findViewById(R.id.text_search_cancel);
@@ -230,6 +238,7 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 title_ET.setText("");
                 note_ET.setText("");
 
+
                 Event e = new Event();
                 e.setNotidate(c_notice.getTimeInMillis());
                 e.setDate(c.getTimeInMillis());
@@ -257,6 +266,7 @@ public class EventListFragment extends androidx.fragment.app.Fragment {
                 eventDB.saveEvent(e);
                 list.add(0,e);
                 adapter.notifyDataSetChanged();
+                NotificationSender.SendEventNotification(e,getContext());
                 dtl.closeTopView(true);
                 c = null;
                 c_notice = null;

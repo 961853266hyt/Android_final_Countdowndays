@@ -2,13 +2,21 @@ package com.example.countdowndays;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 
 
@@ -73,7 +81,9 @@ public class MainActivity extends AppCompatActivity {
         list.add(new DateCalmFrag());
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(),list);
         viewPager.setAdapter(adapter);
+
     }
+
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> list;
@@ -92,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             return list.size();
         }
+
     }
 
     @Override
@@ -100,5 +111,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
 }
