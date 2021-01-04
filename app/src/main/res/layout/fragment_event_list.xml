@@ -92,7 +92,7 @@
                     android:textColorHint="#C5CAE9"
                     android:maxLines="3"
                     android:maxLength="32"
-                    android:textSize="25sp"
+                    android:textSize="22dp"
                     android:hint="设定提醒时间"/>
                     <ImageButton
                         android:id="@+id/imagebutton_notice"

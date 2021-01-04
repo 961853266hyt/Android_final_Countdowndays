@@ -3,23 +3,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/xiaoning3"
-    android:gravity="center">
+    android:background="@drawable/starset"
+    android:gravity="center"
+    android:id="@+id/parent">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="倒数日"
-        android:textSize="60sp"
+        android:text="记录美好时光"
+        android:textSize="40sp"
         android:textStyle="bold"
-        android:textColor="@color/purple_200"
-
-        />
+        android:textColor="@color/white"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="记住每个重要时刻"
-        android:textSize="18sp"
+        android:text="记录你"
+        android:textSize="23sp"
         android:textStyle="bold"
-        android:layout_marginTop="30dp"
-        android:textColor="@color/black" />
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white" />
 </LinearLayout>
